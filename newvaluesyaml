@@ -1,0 +1,55 @@
+---
+# Default values for this helm chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#########################################################################################################
+# !!! ALL TAGS WITHIN UMBRELLA CHARTS HAS TO BE SET TO FALSE BY DEFAULT IN ORDER FOR BTP PROVISIONING TO BE SUCCESSFULL !!!
+tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-condition-fields-in-dependencies
+  nginx: true #set this to true
+  dsc: true #set this to true
+
+
+# Dataspace Connector
+dataspaceconnector:
+  #DSC Image
+  image:
+    repository: ghcr.io/international-data-spaces-association/dataspace-connector
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  #DSC Settings
+  env:
+    config:
+      CONFIGURATION_PATH: "/etc/dataspace-connector/config.json"
+      SERVER_SSL_ENABLED: "false"
+      SERVER_SSL_KEY-STORE: "/var/run/certs/keystore.p12"
+      LOGGING_CONFIG: "file:///etc/dataspace-connector/log4j2.xml"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "metrics,health"
+      MANAGEMENT_ENDPOINT_METRICS_ENABLED: "true"
+      MANAGEMENT_ENDPOINT_HEALTH_ENABLED: "true"
+    secrets:
+      SPRING_SECURITY_USER_NAME: "admin"
+      SPRING_SECURITY_USER_PASSWORD: "password"
+
+  postgresql:
+    enabled: true
+    postgresqlUsername: "password"
+    postgresqlPassword: "username"
+    postgresqlDatabase: "test"
+    service:
+      port: "5432"
+# Ingress
+ingress-nginx:
+  controller:
+    extraArgs:
+      default-ssl-certificate: "default/www-tls"  # K8_NAMESPACE/K8_SECRET_NAME @url: https://kubernetes.github.io/ingress-nginx/user-guide/tls/#consumer-ssl-certificate
+    service:
+      annotations:
+        # Let Gardener manage external DNS records for this Service. See https://gardener.cloud/documentation/guides/administer_shoots/dns_names/ & https://gardener.cloud/documentation/guides/administer_shoots/request_cert/
+        cert.gardener.cloud/secretname: www-tls
+        dns.gardener.cloud/dnsnames: "" # GARDENER_CLUSTER_NAME.GARDENER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com
+        dns.gardener.cloud/ttl: "600"
+        dns.gardener.cloud/class: garden
+  defaultBackend:
+    enabled: true
