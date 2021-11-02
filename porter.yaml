@@ -1,0 +1,85 @@
+# See https://porter.sh/authoring-bundles for documentation on how to configure your bundle
+
+name: spaicer-platform-edge
+version: 0.0.1
+description: "Run the SPAICER Platform on the Edge"
+# invocationImage: spaicer/spaicer-platform-edge:v0.0.1
+# tag: spaicer/spaicer-platform-edge-bundle:v0.0.1
+registry: ghcr.io/spaicer
+
+dockerfile: Dockerfile.tmpl
+
+parameters:
+  - name: namespace
+    description: "Namespace to install platform"
+    type: string
+    default: "default"
+  - name: helm_release
+    description: "Helm release name"
+    type: string
+    default: "spaicer-platform-edge-helm"
+
+outputs:
+  - name: CLUSTER_IP_ADDRESS
+    description: "IP Address assigned to the Cluster Load Balancer"
+    type: string
+    applyTo:
+      - install
+      - upgrade
+
+mixins:
+  - exec
+  - helm3:
+      clientVersion: v3.7.0
+      repositories:
+        stable:
+          url: "https://charts.helm.sh/stable"
+
+# A specific kubeconfig file is provided via CLI command porter credential generate
+credentials:
+  - name: kubeconfig
+    description: "Kube config file with permissions to deploy on the target environment"
+    path: /root/.kube/config
+    applyTo:
+      - install
+      - uninstall
+
+install:
+  - helm3:
+      description: "Deploy SPAICER Platform Edge with Helm"
+      name: "{{bundle.parameters.helm_release}}"
+      namespace: "{{bundle.parameters.namespace}}"
+      chart: helm/umbrella-charts/spaicer-platform-edge-v0.0.1
+      replace: true
+      debug: true
+      outputs:
+        - name: CLUSTER_IP_ADDRESS
+          resourceType: service
+          resourceName: ingress-nginx
+          namespace: "{{bundle.parameters.namespace}}"
+          jsonPath: "{.spec.clusterIP}"
+  - exec:
+      description: "Echo the IP Address"
+      command: ./utils.sh
+      arguments:
+        - "echo-ip {{bundle.outputs.CLUSTER_IP_ADDRESS}}"
+  - exec:
+      description: "Get Ingress IP"
+      command: "kubectl"
+      arguments:
+        - "get"
+        - "service"
+        - "ingress-nginx"
+      flags:
+        o: "json"
+        namespace: "{{bundle.parameters.namespace}}"
+      outputs:
+        - name: "service_ip"
+          jsonPath: "$.status.loadBalancer.ingress[0].ip"
+
+uninstall:
+  - helm3:
+      description: "Uninstall SPAICER Platform Edge with Helm"
+      purge: true
+      releases:
+        - "{{bundle.parameters.helm_release}}"

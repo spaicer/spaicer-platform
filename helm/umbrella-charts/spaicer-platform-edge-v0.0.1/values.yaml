@@ -1,0 +1,27 @@
+---
+# Default values for this helm chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#########################################################################################################
+# !!! ALL TAGS WITHIN UMBRELLA CHARTS HAS TO BE SET TO FALSE BY DEFAULT IN ORDER FOR BTP PROVISIONING TO BE SUCCESSFULL !!!
+tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-condition-fields-in-dependencies
+  nginx: false
+  dsc: false
+
+# Dataspace Connector
+
+# Ingress
+ingress-nginx:
+  controller:
+    extraArgs:
+      default-ssl-certificate: "default/www-tls"  # K8_NAMESPACE/K8_SECRET_NAME @url: https://kubernetes.github.io/ingress-nginx/user-guide/tls/#consumer-ssl-certificate
+    service:
+      annotations:
+        # Let Gardener manage external DNS records for this Service. See https://gardener.cloud/documentation/guides/administer_shoots/dns_names/ & https://gardener.cloud/documentation/guides/administer_shoots/request_cert/
+        cert.gardener.cloud/secretname: www-tls
+        dns.gardener.cloud/dnsnames: "" # GARDENER_CLUSTER_NAME.GARDENER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com
+        dns.gardener.cloud/ttl: "600"
+        dns.gardener.cloud/class: garden
+  defaultBackend:
+    enabled: true
