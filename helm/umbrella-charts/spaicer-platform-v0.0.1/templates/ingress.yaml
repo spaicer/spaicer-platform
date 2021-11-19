@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+#  annotations:
+#    kubernetes.io/ingress.class: ""
+spec:
+  rules:
+    - host: {{ .Values.ingress.subDomain }}.{{ .Values.domain }}
+      http:
+        paths:
+          - path: /dsc
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.dataspaceconnector.fullnameOverride }}
+                port:
+                  number: 8080
+          - path: /v2
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.dataspaceconnector.fullnameOverride }}
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - {{ .Values.ingress.subDomain }}.{{ .Values.domain }}

@@ -4,24 +4,33 @@
 # Declare variables to be passed into your templates.
 
 #########################################################################################################
-# !!! ALL TAGS WITHIN UMBRELLA CHARTS HAS TO BE SET TO FALSE BY DEFAULT IN ORDER FOR BTP PROVISIONING TO BE SUCCESSFULL !!!
 tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-condition-fields-in-dependencies
-  nginx: false
-  dsc: false
+  nginx: true
+  dsc: true
 
-# Dataspace Connector
+#Dataspace Connector
+dataspaceconnector:
+  fullnameOverride: "spaicer-platform-helm-dsc"
+  image:
+    tag: "6.4.0"
+  ingress:
+    enabled: true
+  service:
+    port: 8080
 
 # Ingress
-ingress-nginx:
+ingress:
+  subDomain: "ingress"
   controller:
+    ingressClassResource:
+      default: true
+    watchIngressWithoutClass: true
     extraArgs:
       default-ssl-certificate: "default/www-tls"  # K8_NAMESPACE/K8_SECRET_NAME @url: https://kubernetes.github.io/ingress-nginx/user-guide/tls/#consumer-ssl-certificate
     service:
       annotations:
         # Let Gardener manage external DNS records for this Service. See https://gardener.cloud/documentation/guides/administer_shoots/dns_names/ & https://gardener.cloud/documentation/guides/administer_shoots/request_cert/
-        cert.gardener.cloud/secretname: www-tls
+        cert.gardener.cloud/secretname: "www-tls"
         dns.gardener.cloud/dnsnames: "" # GARDENER_CLUSTER_NAME.GARDENER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com
         dns.gardener.cloud/ttl: "600"
-        dns.gardener.cloud/class: garden
-  defaultBackend:
-    enabled: true
+        dns.gardener.cloud/class: "garden"

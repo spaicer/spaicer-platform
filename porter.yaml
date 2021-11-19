@@ -17,7 +17,10 @@ parameters:
   - name: helm_release
     description: "Helm release name"
     type: string
-    default: "spaicer-platform-edge-helm"
+    default: "spaicer-platform-helm"
+  - name: domain # Example:"KUBERNETES_CLUSTER_NAME.KUBERNETES_CLUSTER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com"
+    description: "Domain name"
+    type: string
 
 outputs:
   - name: CLUSTER_IP_ADDRESS
@@ -49,19 +52,25 @@ install:
       description: "Deploy SPAICER Platform Edge with Helm"
       name: "{{bundle.parameters.helm_release}}"
       namespace: "{{bundle.parameters.namespace}}"
-      chart: helm/umbrella-charts/spaicer-platform-edge-v0.0.1
+      chart: helm/umbrella-charts/spaicer-platform-v0.0.1
       replace: true
+      timeout: 5m
       debug: true
+      wait: true
+      set:
+        domain: "{{bundle.parameters.domain}}"
+        ingress.controller.service.annotations.dns.gardener.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
       outputs:
         - name: CLUSTER_IP_ADDRESS
           resourceType: service
-          resourceName: ingress-nginx
+          resourceName: "{{bundle.parameters.helm_release}}-ingress-platform-controller"
           namespace: "{{bundle.parameters.namespace}}"
           jsonPath: "{.spec.clusterIP}"
   - exec:
       description: "Echo the IP Address"
-      command: ./utils.sh
+      command: "bash"
       arguments:
+        - "utils.sh"
         - "echo-ip {{bundle.outputs.CLUSTER_IP_ADDRESS}}"
   - exec:
       description: "Get Ingress IP"
@@ -69,7 +78,7 @@ install:
       arguments:
         - "get"
         - "service"
-        - "ingress-nginx"
+        - "{{bundle.parameters.helm_release}}-ingress-platorm-controller"
       flags:
         o: "json"
         namespace: "{{bundle.parameters.namespace}}"

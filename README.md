@@ -44,7 +44,13 @@ As a result, a credential named like the bundle is created.
 To install the platform, the `porter install` command can be used. At this point, value for several parameters must be specified:
 
 ```
-porter install --tag spaicer/spaicer-platform-edge-bundle:v0.0.1 -c spaicer-platform-edge --param namespace=<SOME VALUE> --param helm_release=<SOME VALUE>
+porter install --tag spaicer/spaicer:v0.0.1 -c spaicer-credentials --param namespace=<SOME VALUE> --param helm_release=<SOME VALUE>
+```
+
+Example
+
+```
+porter install -c spaicer-platform-edge --param namespace=spaicer-platform --param helm_release=spaicer.py1agu99yn.shoot.canary.k8s-hana.ondemand.com
 ```
 
 Also execute the command `helm dependency update` from within the umbrella chart directory to avoid errors such as `Error: found in Chart.yaml, but missing in charts/ directory: ingress-nginx, dataspaceconnector-v6.4.0`

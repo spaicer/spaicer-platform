@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
-name: dataspace-connector
-description: A Helm chart for Kubernetes
+name: spaicer-platform
+description: An Umbrella Helm chart for the SPAICER Platform (Edge)
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -11,21 +11,44 @@ description: A Helm chart for Kubernetes
 # Library charts provide useful utilities or functions for the chart developer. They're included as
 # a dependency of application charts to inject those utilities and functions into the rendering
 # pipeline. Library charts do not define any templates and therefore cannot be deployed.
+# type: library
 type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.6
+version: 0.0.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
-appVersion: "6.4.0"
+appVersion: "v0.0.1"
+
+# TODO change:
+home: "https://github.com/spaicer/service-offering-cicd-template"
+
+maintainers:
+  - name: SAP Alexandru Danciu
+    email: alexandru.danciu@sap.com
+    url: "https://github.com/alexandrudanciu"
+
+icon: "https://www.spaicer.de/wp-content/uploads/2019/05/logo_spaicer_250.png"
+
+annotations:
+  dataspaceconnector-version: "v6.5.1"
+  umbrella-helm-chart: true
 
 dependencies:
-  - name: postgresql
-    condition: postgresql.enabled
-    version: 10.4.6
-    repository: https://charts.bitnami.com/bitnami
+  - name: ingress-nginx
+    version: "4.0.6"
+    repository: "https://kubernetes.github.io/ingress-nginx"
+    alias: ingress
+    tags:
+      - nginx
+
+  - name: dataspace-connector
+    version: "0.2.8"
+    repository: "file://../../charts/dataspaceconnector-v6.5.1"
+    alias: dataspaceconnector
+    tags:
+      - dsc
