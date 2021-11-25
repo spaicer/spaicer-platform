@@ -1,28 +1,30 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
-#  annotations:
-#    kubernetes.io/ingress.class: ""
+  name: central-dispatcher
+  annotations:
+    kubernetes.io/ingress.class: nginx
+#    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
     - host: {{ .Values.ingress.subDomain }}.{{ .Values.domain }}
       http:
         paths:
           - path: /dsc
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: {{ .Values.dataspaceconnector.fullnameOverride }}
                 port:
-                  number: 8080
+                  number: 80
           - path: /v2
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Values.dataspaceconnector.fullnameOverride }}
                 port:
-                  number: 8080
+                  number: 80
   tls:
     - hosts:
-        - {{ .Values.ingress.subDomain }}.{{ .Values.domain }}
+      - {{ .Values.ingress.subDomain }}.{{ .Values.domain }}
+      secretName: www-tls

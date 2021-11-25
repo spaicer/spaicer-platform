@@ -13,14 +13,22 @@ dataspaceconnector:
   fullnameOverride: "spaicer-platform-helm-dsc"
   image:
     tag: "6.4.0"
-  ingress:
-    enabled: true
-  service:
-    port: 8080
+#  ingress:
+#    enabled: true
+#    className: nginx
+#    hosts:
+#      - host: "dsc"
+#        paths:
+#          - path: /
+#            pathType: Prefix
+#    tls:
+#      - secretName: testsecret-tls
+#        hosts:
+#          - dsc
 
 # Ingress
 ingress:
-  subDomain: "ingress"
+  subDomain: "dispatcher"
   controller:
     ingressClassResource:
       default: true
