@@ -59,7 +59,8 @@ install:
       wait: true
       set:
         domain: "{{bundle.parameters.domain}}"
-        ingress.controller.service.annotations.dns.gardener.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
+        #ingress.controller.service.annotations.dns.gardener.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
+        ingress.controller.service.annotations.dns\.gardener\.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
       outputs:
         - name: CLUSTER_IP_ADDRESS
           resourceType: service
