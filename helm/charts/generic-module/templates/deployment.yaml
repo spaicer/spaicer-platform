@@ -1,0 +1,110 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+  name: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+  namespace: {{ required "A valid namespace is required! (.Values.namespace)" .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+    spec:
+      automountServiceAccountToken: false  # @url: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+      containers:
+        - image: {{ required "A valid docker registry path is required! ( .Values.image)" .Values.image }}
+          imagePullPolicy: Always
+          name: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+          ports:
+            {{- range $key, $value := .Values.containerIngressRouting }}
+            - containerPort: {{ ($value).containerPort }}
+            {{- end }}
+          {{- if .Values.containerEnvironmentVariables }}
+          env:
+            {{- range $key, $value := .Values.containerEnvironmentVariables }}
+            - name: {{ $key | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: "pod-{{ $.Values.appName }}"
+                  key: {{ $key | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 0.05
+            limits:
+              memory: 512Mi
+              cpu: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+      {{- $imageCredentials := .Values.imageCredentials.enabled -}}
+      {{- if $imageCredentials }}
+      imagePullSecrets:
+        - name: "docker-registry-github-{{ required "A valid application name is required! (.Values.appName)" .Values.appName }}"
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+  name: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+  namespace: {{ required "A valid namespace is required! (.Values.namespace)" .Values.namespace }}
+spec:
+  ports:
+    {{- if .Values.containerIngressRouting }}
+      {{- range $key, $value := .Values.containerIngressRouting }}
+      - name: {{ ($value).name }}
+        port: {{ ($value).ingressPort }}
+        targetPort: {{ ($value).containerPort }}
+      {{- end }}
+      {{- end }}
+  selector:
+    app: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ required "A valid application name is required! (.Values.appName)" .Values.appName }}
+  namespace: {{ required "A valid namespace is required! (.Values.namespace)" .Values.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/enable-cors: {{ required "A valid ingress CORS enablement option (true/false) is required! (.Values.ingressEnableCors)" $.Values.ingressEnableCors | quote }}  # see values.yaml
+    nginx.ingress.kubernetes.io/backend-protocol: {{ required "A valid ingress backend protocol is required! (.Values.ingressBackendProtocol)" $.Values.ingressBackendProtocol | quote }}  # see values.yaml
+    #nginx.ingress.kubernetes.io/enable-opentracing: "true"
+spec:
+  rules:
+    {{- if .Values.containerIngressRouting }}
+      {{- range $key, $value := .Values.containerIngressRouting }}
+      {{- if $value.subDomain }}
+      - host: "{{$value.subDomain}}{{ required "A valid url is required! (.Values.global.domain)" $.Values.global.domain }}"
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ required "A valid application name is required! (.Values.appName)" $.Values.appName }}
+                  port:
+                    number: {{ $value.ingressPort}}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+  tls:
+    - hosts:
+      {{- if .Values.containerIngressRouting }}
+      {{- range $key, $value := .Values.containerIngressRouting }}
+      {{- if $value.subDomain }}
+      - "{{$value.subDomain}}{{ required "A valid url is required! (.Values.global.domain)" $.Values.global.domain }}"
+          {{- end }}
+      {{- end }}
+      {{- end }}

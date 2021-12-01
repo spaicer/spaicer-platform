@@ -1,0 +1,42 @@
+---
+# Default values for this helm chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- namespace in which this helm sub chart will be installed
+namespace: ""
+
+# -- Application name which needs to be defined by umbrella / deployed chart!
+appName: ""
+
+# -- docker container image url which needs to be defined by umbrella / deployed chart!
+image: ""
+
+# -- set these variables to create a k8s docker registry secret for accessing a private container repository
+imageCredentials:  # needed for imagePullSecret docker-registry-github
+  # -- enable=1 / disable=0
+  enabled: 0
+  # -- base url of private container repository
+  registry: ""
+  # -- username of private container repository
+  username: ""
+  # -- access token / password to access private container repository
+  accessToken: ""
+
+  # containerEnvironmentVariables -- use this list to inject environment startup variables @url: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
+  #containerEnvironmentVariables:
+  #KEY: ""
+
+# ingressBackendProtocol -- Defines if ingress uses HTTP or HTTPS to POD Application. See https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#backend-protocol
+ingressBackendProtocol: HTTP
+# -- Enable or disable CORS. See https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#enable-cors
+ingressEnableCors: false
+
+containerIngressRouting:
+  - name: http8080
+    # -- Port which will be used on K8s Loadbalancer
+    ingressPort: 8080
+    # -- Port which will receive incoming traffic from "ingressPort"
+    containerPort: 8080
+    # -- Define Subdomain for ingress traffic on port "ingressPort" to container port "containerPort". E.g.: https://{$subdomain}.{$domain}/..
+    subDomain: ""

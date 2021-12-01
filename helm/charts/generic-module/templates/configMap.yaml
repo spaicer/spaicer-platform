@@ -1,0 +1,12 @@
+{{- if .Values.containerEnvironmentVariables }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "pod-{{ required "A valid application name is required! (.Values.appName)" .Values.appName }}"
+  namespace: {{ required "A valid namespace is required! (.Values.namespace)" .Values.namespace }}
+data:
+  {{- range $key, $value := .Values.containerEnvironmentVariables }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}

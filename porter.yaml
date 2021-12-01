@@ -21,6 +21,12 @@ parameters:
   - name: domain # Example:"KUBERNETES_CLUSTER_NAME.KUBERNETES_CLUSTER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com"
     description: "Domain name"
     type: string
+  - name: github-spaicer-user
+    description: "GitHub SPAICER username"
+    type: string
+  - name: github-spaicer-token
+    description: "GitHub SPAICER auth token"
+    type: string
 
 outputs:
   - name: CLUSTER_IP_ADDRESS
@@ -58,9 +64,14 @@ install:
       debug: true
       wait: true
       set:
-        domain: "{{bundle.parameters.domain}}"
-        #ingress.controller.service.annotations.dns.gardener.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
+        global.domain: "{{bundle.parameters.domain}}"
         ingress.controller.service.annotations.dns\.gardener\.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
+        digitalcoilbackend.namespace: "{{bundle.parameters.namespace}}"
+        digitalcoilbackend.imageCredentials.username: "{{bundle.parameters.github-spaicer-user}}"
+        digitalcoilbackend.imageCredentials.accessToken: "{{bundle.parameters.github-spaicer-token}}"
+        digitalcoilui.namespace: "{{bundle.parameters.namespace}}"
+        digitalcoilui.imageCredentials.username: "{{bundle.parameters.github-spaicer-user}}"
+        digitalcoilui.imageCredentials.accessToken: "{{bundle.parameters.github-spaicer-token}}"
       outputs:
         - name: CLUSTER_IP_ADDRESS
           resourceType: service

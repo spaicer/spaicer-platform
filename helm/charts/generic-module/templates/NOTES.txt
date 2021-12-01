@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------------------------------------------------
+-------------------------- helm/charts/sap-ids-custom-container/templates/NOTES.txt ------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+Installed custom SAP IDS Applications:
+{{- if (.Values).domain }}
+- appName:        {{(.Values).namespace}}/{{(.Values).appName}}
+  * image:        {{(.Values).image}}
+  * public urls:
+  {{- range $key, $containerIngressRoutingValue := (.Values).containerIngressRouting -}}
+    {{- if ($containerIngressRoutingValue).subDomain -}}
+                  https:///{{ ($containerIngressRoutingValue).subDomain }}{{ $.Values.global.domain }}
+    {{- end }}
+  {{- end }}
+  {{- if (.Values).containerEnvironmentVariables }}
+  * environment variable(s):
+  {{- range $key, $containerEnvironmentVariablesValue := (.Values).containerEnvironmentVariables }}
+    {{- if ($containerEnvironmentVariablesValue) }}
+    - {{ $key }}  = {{ $containerEnvironmentVariablesValue | quote }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+
+Additional Information(s):
+- Installed Namespace:  {{ .Values.namespace }}

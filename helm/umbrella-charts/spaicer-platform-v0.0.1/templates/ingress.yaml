@@ -4,10 +4,19 @@ metadata:
   name: central-dispatcher
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+#    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+#    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+#    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+#    nginx.org/websocket-services: {{ .Values.emqxmqttbroker.fullnameOverride }}
+#    nginx.ingress.kubernetes.io/websocket-services: {{ .Values.emqxmqttbroker.fullnameOverride }}
+#    nginx.ingress.kubernetes.io/allow-http: "true"
+#    nginx.ingress.kubernetes.io/secure-backends: "false"
+#    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 #    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-    - host: {{ .Values.ingress.subDomain }}.{{ .Values.domain }}
+    - host: {{ .Values.ingress.subDomain }}.{{ .Values.global.domain }}
       http:
         paths:
           - path: /dsc
@@ -17,6 +26,20 @@ spec:
                 name: {{ .Values.dataspaceconnector.fullnameOverride }}
                 port:
                   number: 80
+          - path: /emqx-ws
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.emqxmqttbroker.fullnameOverride }}
+                port:
+                  number: 8083
+          - path: /emqx-wss
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.emqxmqttbroker.fullnameOverride }}
+                port:
+                  number: 8084
           - path: /v2
             pathType: ImplementationSpecific
             backend:
@@ -26,5 +49,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-      - {{ .Values.ingress.subDomain }}.{{ .Values.domain }}
+      - {{ .Values.ingress.subDomain }}.{{ .Values.global.domain }}
       secretName: www-tls

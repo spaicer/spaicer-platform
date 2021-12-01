@@ -6,25 +6,37 @@
 #########################################################################################################
 tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-condition-fields-in-dependencies
   nginx: true
-  dsc: true
+#  dsc: true
+  emqx: true
+  nodered: true
+  airflow: true
+  prototype-uc1-narrative1-digital-coil: true
+  digital-coil-ui: true
+
+global:
+  domain: ""
 
 #Dataspace Connector
 dataspaceconnector:
   fullnameOverride: "spaicer-platform-helm-dsc"
   image:
     tag: "6.4.0"
-#  ingress:
-#    enabled: true
-#    className: nginx
-#    hosts:
-#      - host: "dsc"
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#    tls:
-#      - secretName: testsecret-tls
-#        hosts:
-#          - dsc
+
+# EMQ X (MQTT Broker)
+emqxmqttbroker:
+  subDomainDashboard: "emqx-dashboard"
+  subDomainApi: "emqx-api"
+  fullnameOverride: "spaicer-platform-helm-emqx"
+  replicaCount: 1
+
+# Node-Red
+nodered:
+  subDomain: "node-red"
+  fullnameOverride: "spaicer-platform-helm-nodered"
+
+# Apache Airflow
+#airflow:
+#  fullnameOverride: "spaicer-platform-helm-airflow"
 
 # Ingress
 ingress:
@@ -42,3 +54,33 @@ ingress:
         dns.gardener.cloud/dnsnames: "" # GARDENER_CLUSTER_NAME.GARDENER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com
         dns.gardener.cloud/ttl: "600"
         dns.gardener.cloud/class: "garden"
+
+digitalcoilbackend:
+  namespace: ""
+  appName: "digital-coil-backend"
+  image: "ghcr.io/spaicer/prototype-uc1-narrative1-digital-coil:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 8080
+      subDomain: "digitalcoilbackend."
+
+digitalcoilui:
+  namespace: ""
+  appName: "digital-coil-ui"
+  image: "ghcr.io/spaicer/digital-coil:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 80
+      subDomain: "digitalcoilui."

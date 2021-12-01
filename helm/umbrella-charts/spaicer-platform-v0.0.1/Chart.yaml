@@ -46,9 +46,44 @@ dependencies:
     tags:
       - nginx
 
-  - name: dataspace-connector
-    version: "0.2.8"
-    repository: "file://../../charts/dataspaceconnector-v6.5.1"
-    alias: dataspaceconnector
+#  - name: dataspace-connector
+#    version: "0.2.8"
+#    repository: "file://../../charts/dataspaceconnector-v6.5.1"
+#    alias: dataspaceconnector
+#    tags:
+#      - dsc
+
+  - name: emqx
+    version: "4.3.10"
+    repository: "https://repos.emqx.io/charts"
+    alias: emqxmqttbroker
     tags:
-      - dsc
+      - emqx
+
+  - name: node-red
+    version: "9.0.0"
+    repository: "https://k8s-at-home.com/charts/"
+    alias: nodered
+    tags:
+      - nodered
+
+#  - name: airflow
+#    version: "8.5.2"
+#    repository: "https://airflow-helm.github.io/charts"
+#    alias: airflow
+#    tags:
+#      - airflow
+
+  - name: generic-module
+    version: "0.0.1"
+    repository: "file://../../charts/generic-module"
+    alias: digitalcoilbackend
+    tags:
+      - prototype-uc1-narrative1-digital-coil
+
+  - name: generic-module
+    version: "0.0.1"
+    repository: "file://../../charts/generic-module"
+    alias: digitalcoilui
+    tags:
+      - digital-coil-ui
