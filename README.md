@@ -1,5 +1,8 @@
-# service-offering-cicd-template
-Template for GitHub repositories providing service offerings based on cloud native application bundles
+# SPAICER Platform
+
+This project defines a blueprint for a SPACIER platform based on cloud native application bundles.
+
+Service instance providers can use the platform as-is or customize it by adding/removing components or changing the configuration.
 
 ## Build
 porter build
