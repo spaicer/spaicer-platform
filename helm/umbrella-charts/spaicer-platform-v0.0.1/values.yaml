@@ -12,6 +12,7 @@ tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-con
   airflow: true
   prototype-uc1-narrative1-digital-coil: true
   digital-coil-ui: true
+  annotator-module: true
 
 global:
   domain: ""
@@ -36,7 +37,10 @@ nodered:
 
 # Apache Airflow
 #airflow:
-#  fullnameOverride: "spaicer-platform-helm-airflow"
+#  fullnameOverride: "spaicer-platform-airflow"
+# To be contributed by version 1.4.0
+#  createUserJob:
+#    useHelmHooks: false
 
 # Ingress
 ingress:
@@ -54,6 +58,8 @@ ingress:
         dns.gardener.cloud/dnsnames: "" # GARDENER_CLUSTER_NAME.GARDENER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com
         dns.gardener.cloud/ttl: "600"
         dns.gardener.cloud/class: "garden"
+  tcp:
+    1883: "spaicer-platform/spaicer-platform-helm-emqx:1883"
 
 digitalcoilbackend:
   namespace: ""
@@ -84,3 +90,18 @@ digitalcoilui:
       ingressPort: 8080
       containerPort: 80
       subDomain: "digitalcoilui."
+
+annotatormodule:
+  namespace: ""
+  appName: "annotator-module"
+  image: "ghcr.io/spaicer/annotator-module:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 8080
+      subDomain: "annotatormodule."

@@ -59,10 +59,9 @@ install:
       name: "{{bundle.parameters.helm_release}}"
       namespace: "{{bundle.parameters.namespace}}"
       chart: helm/umbrella-charts/spaicer-platform-v0.0.1
-      replace: true
+      wait: true
       timeout: 5m
       debug: true
-      wait: true
       set:
         global.domain: "{{bundle.parameters.domain}}"
         ingress.controller.service.annotations.dns\.gardener\.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
@@ -72,6 +71,9 @@ install:
         digitalcoilui.namespace: "{{bundle.parameters.namespace}}"
         digitalcoilui.imageCredentials.username: "{{bundle.parameters.github-spaicer-user}}"
         digitalcoilui.imageCredentials.accessToken: "{{bundle.parameters.github-spaicer-token}}"
+        annotatormodule.namespace: "{{bundle.parameters.namespace}}"
+        annotatormodule.imageCredentials.username: "{{bundle.parameters.github-spaicer-user}}"
+        annotatormodule.imageCredentials.accessToken: "{{bundle.parameters.github-spaicer-token}}"
       outputs:
         - name: CLUSTER_IP_ADDRESS
           resourceType: service
