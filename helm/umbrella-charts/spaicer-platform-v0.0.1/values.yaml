@@ -60,6 +60,7 @@ ingress:
         dns.gardener.cloud/class: "garden"
   tcp:
     1883: "spaicer-platform/spaicer-platform-helm-emqx:1883"
+    8883: "spaicer-platform/spaicer-platform-helm-emqx:8883"
 
 digitalcoilbackend:
   namespace: ""
