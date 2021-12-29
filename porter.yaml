@@ -13,11 +13,11 @@ parameters:
   - name: namespace
     description: "Namespace to install platform"
     type: string
-    default: "default"
+    default: "spaicerns1"
   - name: helm_release
     description: "Helm release name"
     type: string
-    default: "spaicer-platform-helm"
+    default: "spaicerns1-helm"
   - name: domain # Example:"KUBERNETES_CLUSTER_NAME.KUBERNETES_CLUSTER_PROJECT_NAME.shoot.canary.k8s-hana.ondemand.com"
     description: "Domain name"
     type: string
@@ -26,6 +26,12 @@ parameters:
     type: string
   - name: github-spaicer-token
     description: "GitHub SPAICER auth token"
+    type: string
+  - name: oauth_client_id
+    description: "OAuth Client ID"
+    type: string
+  - name: oauth_client_secret
+    description: "OAuth Client Secret"
     type: string
 
 outputs:
@@ -64,6 +70,8 @@ install:
       debug: true
       set:
         global.domain: "{{bundle.parameters.domain}}"
+        global.oauth_client_id: "{{bundle.parameters.oauth_client_id}}"
+        global.oauth_client_secret: "{{bundle.parameters.oauth_client_secret}}"
         ingress.controller.service.annotations.dns\.gardener\.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
         digitalcoilbackend.namespace: "{{bundle.parameters.namespace}}"
         digitalcoilbackend.imageCredentials.username: "{{bundle.parameters.github-spaicer-user}}"

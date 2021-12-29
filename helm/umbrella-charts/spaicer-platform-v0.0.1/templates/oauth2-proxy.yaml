@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: {{ .Values.global.oauth2_proxy_name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        k8s-app: oauth2-proxy
+    spec:
+      containers:
+        - args:
+            - --provider=github
+            - --email-domain=sap.com
+            - --email-domain=dfki.de
+            - --email-domain=dezem.de
+            - --email-domain=seitec.info
+            - --upstream=file:///dev/null
+            - --http-address=0.0.0.0:{{ .Values.global.oauth2_proxy_port }}
+            - --whitelist-domain=.{{ .Values.global.domain }}
+            - --cookie-domain=.{{ .Values.global.domain }}
+          # Register a new application
+          # https://github.com/settings/applications/new
+          env:
+            - name: OAUTH2_PROXY_CLIENT_ID
+              value: {{ .Values.global.oauth_client_id }}
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              value: {{ .Values.global.oauth_client_secret }}
+            # docker run -ti --rm python:3-alpine python -c 'import secrets,base64; print(base64.b64encode(base64.b64encode(secrets.token_bytes(16))));'
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-proxy-secret
+                  key: cookie-secret
+          image: quay.io/oauth2-proxy/oauth2-proxy:latest
+          imagePullPolicy: Always
+          name: oauth2-proxy
+          ports:
+            - containerPort: {{ .Values.global.oauth2_proxy_port }}
+              protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: {{ .Values.global.oauth2_proxy_name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+    - name: http
+      port: {{ .Values.global.oauth2_proxy_port }}
+      protocol: TCP
+      targetPort: {{ .Values.global.oauth2_proxy_port }}
+  selector:
+    k8s-app: oauth2-proxy

@@ -3,6 +3,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Namespace (i.e., spaicerns1) must be maintained in multiple parameters within this file
+
 #########################################################################################################
 tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-condition-fields-in-dependencies
   nginx: true
@@ -13,13 +15,23 @@ tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-con
   prototype-uc1-narrative1-digital-coil: true
   digital-coil-ui: true
   annotator-module: true
+  oauth2-proxy: true
 
 global:
   domain: ""
+  # Subdomain of oauth2-proxy referenced by external oauth2 provider
+  authDomain: "auth"
+  # Name of the oauth2-proxy service referenced by all ingress definitions
+  oauth2_proxy_name: "oauth2-proxy"
+  # Port of the oauth2-proxy service referenced by all ingress definitions
+  oauth2_proxy_port: 4180
+  # Secrets used by oauth2-proxy to connect to the external oauth2 provider
+  oauth_client_id: ""
+  oauth_client_secret: ""
 
 #Dataspace Connector
 dataspaceconnector:
-  fullnameOverride: "spaicer-platform-helm-dsc"
+  fullnameOverride: "spaicerns1-helm-dsc"
   image:
     tag: "6.4.0"
 
@@ -27,17 +39,17 @@ dataspaceconnector:
 emqxmqttbroker:
   subDomainDashboard: "emqx-dashboard"
   subDomainApi: "emqx-api"
-  fullnameOverride: "spaicer-platform-helm-emqx"
+  fullnameOverride: "spaicerns1-helm-emqx"
   replicaCount: 1
 
 # Node-Red
 nodered:
   subDomain: "node-red"
-  fullnameOverride: "spaicer-platform-helm-nodered"
+  fullnameOverride: "spaicerns1-helm-nodered"
 
 # Apache Airflow
 #airflow:
-#  fullnameOverride: "spaicer-platform-airflow"
+#  fullnameOverride: "spaicerns1-airflow"
 # To be contributed by version 1.4.0
 #  createUserJob:
 #    useHelmHooks: false
@@ -50,7 +62,7 @@ ingress:
       default: true
     watchIngressWithoutClass: true
     extraArgs:
-      default-ssl-certificate: "default/www-tls"  # K8_NAMESPACE/K8_SECRET_NAME @url: https://kubernetes.github.io/ingress-nginx/user-guide/tls/#consumer-ssl-certificate
+      default-ssl-certificate: "spaicerns1/www-tls"  # K8_NAMESPACE/K8_SECRET_NAME @url: https://kubernetes.github.io/ingress-nginx/user-guide/tls/#consumer-ssl-certificate
     service:
       annotations:
         # Let Gardener manage external DNS records for this Service. See https://gardener.cloud/documentation/guides/administer_shoots/dns_names/ & https://gardener.cloud/documentation/guides/administer_shoots/request_cert/
@@ -59,9 +71,12 @@ ingress:
         dns.gardener.cloud/ttl: "600"
         dns.gardener.cloud/class: "garden"
   tcp:
-    1883: "spaicer-platform/spaicer-platform-helm-emqx:1883"
-    8883: "spaicer-platform/spaicer-platform-helm-emqx:8883"
+    1883: "spaicerns1/spaicerns1-helm-emqx:1883"
+    8883: "spaicerns1/spaicerns1-helm-emqx:8883"
 
+### Smart Resilience Services
+
+# Smart Resilience Service - Digital Coil
 digitalcoilbackend:
   namespace: ""
   appName: "digital-coil-backend"
@@ -92,6 +107,9 @@ digitalcoilui:
       containerPort: 80
       subDomain: "digitalcoilui."
 
+### AI Modules
+
+# AI Module - Annotator
 annotatormodule:
   namespace: ""
   appName: "annotator-module"

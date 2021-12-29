@@ -4,6 +4,8 @@ metadata:
   name: emqx-dashboard
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-url: http://{{ .Values.global.oauth2_proxy_name  }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.global.oauth2_proxy_port }}/oauth2/auth
+    nginx.ingress.kubernetes.io/auth-signin: https://{{ required "A valid url is required! (.Values.global.authDomain)" .Values.global.authDomain  }}.{{ required "A valid url is required! (.Values.global.domain)" .Values.global.domain  }}/oauth2/start?rd=https%3A%2F%2F$host$escaped_request_uri
 spec:
   rules:
     - host: {{ .Values.emqxmqttbroker.subDomainDashboard }}.{{ .Values.global.domain }}
