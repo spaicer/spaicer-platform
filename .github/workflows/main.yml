@@ -2,6 +2,12 @@ name: CI
 
 on: [push]
 
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   #Job for publishing the application bundle (bundled service offering) to an OCI-compliant repository (i.e., GitHub Packages).
   porter:
