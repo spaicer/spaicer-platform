@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kong-configmap
+  labels:
+    app: kong-configmap
+data:
+  kong.yml: |-
+{{ tpl (.Files.Get "kong.dbless.yaml" | indent 4) . }}

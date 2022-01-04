@@ -16,6 +16,7 @@ tags:  # see ./Chart.yaml @url: https://helm.sh/docs/topics/charts/#tags-and-con
   digital-coil-ui: true
   annotator-module: true
   oauth2-proxy: true
+  kong: true
 
 global:
   domain: ""
@@ -46,6 +47,67 @@ emqxmqttbroker:
 nodered:
   subDomain: "node-red"
   fullnameOverride: "spaicerns1-helm-nodered"
+
+# Kong API Gateway
+kong:
+  env:
+    prefix: /kong_prefix/
+    database: "off"
+#    database: postgres
+#    pg_database: kong
+#    pg_user: kong
+#    pg_password: password
+  admin:
+    enabled: true
+    type: NodePort
+    tls:
+      enabled: true
+      servicePort: 8444
+      containerPort: 8444
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      tls: www-tls
+      hostname: ""
+      path: /
+  proxy:
+    enabled: true
+    type: LoadBalancer
+    http:
+      enabled: true
+      servicePort: 80
+      containerPort: 8000
+    tls:
+      enabled: true
+      servicePort: 443
+      containerPort: 8443
+      parameters:
+        - http2
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      tls: www-tls
+      hostname: ""
+      path: /
+#  postgresql:
+#    enabled: true
+#    postgresqlUsername: kong
+#    postgresqlDatabase: kong
+#    postgresqlPassword: password
+#    service:
+#      port: 5432
+#  migrations:
+#    preUpgrade: true
+#    postUpgrade: true
+  dblessConfig:
+    configMap: "kong-configmap"
+  ingressController:
+    enabled: false
+    installCRDs: false
 
 # Apache Airflow
 #airflow:
@@ -106,6 +168,8 @@ digitalcoilui:
       ingressPort: 8080
       containerPort: 80
       subDomain: "digitalcoilui."
+  containerEnvironmentVariables:
+    BACKEND_URL: "http://digital-coil-backend.spaicerns1.svc.cluster.local:8080"
 
 ### AI Modules
 

@@ -67,6 +67,13 @@ dependencies:
     tags:
       - nodered
 
+  - name: kong
+    version: "2.6.3"
+    repository: "https://charts.konghq.com"
+    alias: kong
+    tags:
+      - kong
+
 # Wait for airflow helm chart version 1.4.0 to fix db migration timeout
 #  - name: airflow
 #    version: "1.4.0"#"8.5.2"
