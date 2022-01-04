@@ -73,7 +73,7 @@ and the umbrella chart values.yaml.
 The platform deploys a Kong API Gateway in db-less mode (as open-source edition, excl. Kong Portal and Kong Manager).
 SPAICER AI module API endpoints are integrated as Kong services and exposed as Kong routes.
 Services, routes and consumers are maintained in the *kong.dbless.yaml* file of the umbrella chart.
-Corresponding API keys are generated and assigned to consumers (i.e., users) automatically after installation.
+Corresponding [API keys](https://docs.konghq.com/hub/kong-inc/key-auth/) are generated and assigned to consumers (i.e., users) automatically after installation.
 
 Requests to exposed API endpoints must include an api key:
 
