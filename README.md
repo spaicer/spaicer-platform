@@ -70,7 +70,9 @@ and the umbrella chart values.yaml.
 ## Operations
 
 ### API Gateway
-The platform deploys a Kong API Gateway in db-less mode (as open-source edition, excl. Kong Portal and Kong Manager).
+The platform deploys a Kong API Gateway in DB-less mode (as open-source edition, excl. Kong Portal and Kong Manager).
+
+
 SPAICER AI module API endpoints are integrated as Kong services and exposed as Kong routes.
 Services, routes and consumers are maintained in the *kong.dbless.yaml* file of the umbrella chart.
 Corresponding [API keys](https://docs.konghq.com/hub/kong-inc/key-auth/) are generated and assigned to consumers (i.e., users) automatically after installation.
@@ -79,4 +81,11 @@ Requests to exposed API endpoints must include an api key:
 
 ```
 curl https://kong-proxy.<namespace>.<domain>:443/<module path>?apikey=<some_key>
+```
+
+As Kong is used in the DB-less mode, the [decK](https://docs.konghq.com/deck/) CLI is not really needed.
+Nevertheless, decK can be used to query the auto-generated api keys of consumers:
+
+```
+deck dump --kong-addr https://kong-admin.<namespace>.<domain>:443
 ```
