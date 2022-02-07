@@ -4,17 +4,36 @@ This project defines a blueprint for a SPACIER platform based on cloud native ap
 
 Service instance providers can use the platform as-is or customize it by adding/removing components or changing the configuration.
 
-## Build
+## Getting Started
+
+### Prerequisites
+
+* Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* Install [kubectl](https://kubernetes.io/docs/tasks/tools/)
+* Configure access to kubernetes cluster based on [kubeconfig](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
+* Install [Helm](https://helm.sh/docs/intro/install/)
+* Install [porter.sh](https://porter.sh/install/)
+
+### Clone
+
+```
+git clone https://github.com/spaicer/spaicer-platform.git
+```
+
+### Build
+
 For building the cloud native application bundle execute the following command:
 
 ```
 porter build
 ```
 
-## Installation
+### Installation
+
 To use this bundle, you will need an existing Kubernetes cluster and a kubeconfig file for use as a credential.
 
-### Generate a Credential
+#### Generate a Credential
+
 Before installing the bundle, a credential must be generated. To achieve this, the command `porter credentials generate` can be used:
 
 ```
@@ -46,7 +65,8 @@ Enter the path that will be used to set credential "kubeconfig" $HOME/.kube/conf
 
 As a result, a credential named like the bundle is created. 
 
-### Install the Platform
+#### Install the Platform
+
 To install the platform, the `porter install` command can be used. At this point, values for several parameters must be specified:
 
 ```
@@ -60,18 +80,19 @@ porter install --tag spaicer/spaicer:v0.0.1 -c generated_credential_name  \
 
 Also execute the command `helm dependency update` from within the umbrella chart directory to avoid errors such as `Error: found in Chart.yaml, but missing in charts/ directory: ingress-nginx, dataspaceconnector-v6.4.0`
 
-## Customization
+### Customization
 
-### Kubernetes Namespace
+#### Kubernetes Namespace
+
 The default namespace used for deploying the SPAICER platform is *spaicerns1*.
 Due to the limited possibility of referencing parameters within the Helm values files, the namespace must be specified in several locations within the porter.yaml
 and the umbrella chart values.yaml.
 
-## Operations
+### Operations
 
-### API Gateway
+#### API Gateway
+
 The platform deploys a Kong API Gateway in DB-less mode (as open-source edition, excl. Kong Portal and Kong Manager).
-
 
 SPAICER AI module API endpoints are integrated as Kong services and exposed as Kong routes.
 Services, routes and consumers are maintained in the *kong.dbless.yaml* file of the umbrella chart.
