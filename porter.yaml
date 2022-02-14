@@ -75,6 +75,7 @@ install:
         ingress.controller.service.annotations.dns\.gardener\.cloud/dnsnames: "*.{{bundle.parameters.domain}}"
         kong.admin.ingress.hostname: "kong-admin.{{bundle.parameters.domain}}"
         kong.proxy.ingress.hostname: "kong-proxy.{{bundle.parameters.domain}}"
+        airflow.ingress.web.host: "airflow-web.{{bundle.parameters.domain}}"
         digitalcoilbackend.namespace: "{{bundle.parameters.namespace}}"
         digitalcoilbackend.imageCredentials.username: "{{bundle.parameters.github-spaicer-user}}"
         digitalcoilbackend.imageCredentials.accessToken: "{{bundle.parameters.github-spaicer-token}}"

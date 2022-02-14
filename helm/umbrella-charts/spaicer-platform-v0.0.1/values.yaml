@@ -110,11 +110,19 @@ kong:
     installCRDs: false
 
 # Apache Airflow
-#airflow:
-#  fullnameOverride: "spaicerns1-airflow"
-# To be contributed by version 1.4.0
-#  createUserJob:
-#    useHelmHooks: false
+airflow:
+  fullnameOverride: "spaicerns1-airflow"
+  # Disable migration jobs
+  migrateDatabaseJob:
+    useHelmHooks: false
+  ingress:
+    enabled: true
+    web:
+      host: ""
+      ingressClassName: nginx
+      tls:
+        enabled: true
+        secretName: "www-tls"
 
 # Ingress
 ingress:
