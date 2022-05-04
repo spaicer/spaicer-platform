@@ -112,6 +112,13 @@ kong:
 # Apache Airflow
 airflow:
   fullnameOverride: "spaicerns1-airflow"
+  dags:
+    gitSync:
+      enabled: true
+      repo: https://github.com/spaicer/airflow-dags
+      branch: main
+      rev: HEAD
+      subPath: ""
   # Disable migration jobs
   migrateDatabaseJob:
     useHelmHooks: false
