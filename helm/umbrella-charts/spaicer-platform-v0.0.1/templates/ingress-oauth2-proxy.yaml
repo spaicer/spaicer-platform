@@ -3,9 +3,10 @@ kind: Ingress
 metadata:
   name: {{ .Values.global.oauth2_proxy_name }}
   namespace: {{ .Release.Namespace }}
-  annotations:
-    kubernetes.io/ingress.class: nginx
+#  annotations:
+#    kubernetes.io/ingress.class: nginx
 spec:
+  ingressClassName: nginx
   rules:
     - host: {{ required "A valid url is required! (.Values.global.authDomain)" .Values.global.authDomain  }}.{{ required "A valid url is required! (.Values.global.domain)" .Values.global.domain  }}
       http:

@@ -18,6 +18,7 @@ spec:
       containers:
         - args:
             - --provider=github
+            - --scope=user:email
             - --email-domain=sap.com
             - --email-domain=dfki.de
             - --email-domain=dezem.de

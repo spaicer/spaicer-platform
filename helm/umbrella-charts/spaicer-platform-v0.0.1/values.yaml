@@ -151,6 +151,9 @@ ingress:
     1883: "spaicerns1/spaicerns1-helm-emqx:1883"
     8883: "spaicerns1/spaicerns1-helm-emqx:8883"
 
+cert-manager:
+  installCRDs: true
+
 ### Smart Resilience Services
 
 # Smart Resilience Service - Digital Coil

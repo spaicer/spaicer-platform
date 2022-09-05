@@ -46,6 +46,12 @@ dependencies:
     tags:
       - nginx
 
+  - name: cert-manager
+    version: "1.7.2" # @see https://github.com/SAP/sap-btp-service-operator/issues/101
+    repository: "https://charts.jetstack.io"
+    tags:
+      - cert-manager
+
 #  - name: dataspace-connector
 #    version: "0.2.8"
 #    repository: "file://../../charts/dataspaceconnector-v6.5.1"
