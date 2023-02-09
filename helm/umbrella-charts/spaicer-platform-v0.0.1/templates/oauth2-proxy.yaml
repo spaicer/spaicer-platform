@@ -25,6 +25,8 @@ spec:
             - --email-domain=seitec.info
             - --email-domain=seiotec.com
             - --email-domain=me.com
+            - --email-domain=tu-darmstadt.de
+            - --email-domain=deutschebahn.com
             - --upstream=file:///dev/null
             - --http-address=0.0.0.0:{{ .Values.global.oauth2_proxy_port }}
             - --whitelist-domain=.{{ .Values.global.domain }}

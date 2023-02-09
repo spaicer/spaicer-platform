@@ -108,3 +108,33 @@ dependencies:
     alias: annotatormodule
     tags:
       - annotator-module
+
+  # Supply Chain Analyzer UI and Backend
+  - name: generic-module
+    version: "0.0.1"
+    repository: "file://../../charts/generic-module"
+    alias: supplychainanalyzer
+    tags:
+      - supply-chain-analyzer
+
+  - name: generic-module
+    version: "0.0.1"
+    repository: "file://../../charts/generic-module"
+    alias: supplychainui
+    tags:
+      - supply-chain-ui
+
+  # Maintenance Level Prediction UI and Backend
+  - name: generic-module
+    version: "0.0.1"
+    repository: "file://../../charts/generic-module"
+    alias: maintenancelevelpredictionui
+    tags:
+      - maintenance-level-prediction-ui
+
+  - name: generic-module
+    version: "0.0.1"
+    repository: "file://../../charts/generic-module"
+    alias: ap7maintenancelevelprediction
+    tags:
+      - ap7-maintenance-level-prediction

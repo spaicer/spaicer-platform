@@ -189,6 +189,72 @@ digitalcoilui:
   containerEnvironmentVariables:
     BACKEND_URL: "http://digital-coil-backend.spaicerns1.svc.cluster.local:8080"
 
+# Supply Chain Analyser
+supplychainanalyzer:
+  namespace: ""
+  appName: "supply-chain-analyzer"
+  image: "ghcr.io/spaicer/supply-chain-analyzer:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 8080
+      subDomain: "supplychainanalyzer."
+
+supplychainui:
+  namespace: ""
+  appName: "supply-chain-ui"
+  image: "ghcr.io/spaicer/supply-chain-ui:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 80
+      subDomain: "supplychainui."
+  containerEnvironmentVariables:
+    BACKEND_URL: "http://supply-chain-analyzer.spaicerns1.svc.cluster.local:8080"
+
+# Maintenance Level Prediction
+ap7maintenancelevelprediction:
+  namespace: ""
+  appName: "ap7-maintenance-level-prediction"
+  image: "ghcr.io/spaicer/ap7-maintenance-level-prediction:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 8080
+      subDomain: "ap7maintenancelevelprediction."
+
+maintenancelevelpredictionui:
+  namespace: ""
+  appName: "maintenance-level-prediction-ui"
+  image: "ghcr.io/spaicer/maintenance-level-prediction-ui:main"
+  imageCredentials: # needed for imagePullSecret docker-registry-github
+    enabled: 1
+    registry: "ghcr.io"
+    username: ""
+    accessToken: ""
+  containerIngressRouting:
+    - name: http8080
+      ingressPort: 8080
+      containerPort: 80
+      subDomain: "maintenancelevelpredictionui."
+  containerEnvironmentVariables:
+    BACKEND_URL: "http://ap7-maintenance-level-prediction.spaicerns1.svc.cluster.local:8080"
+
 ### AI Modules
 
 # AI Module - Annotator
