@@ -27,6 +27,7 @@ spec:
             - --email-domain=me.com
             - --email-domain=tu-darmstadt.de
             - --email-domain=deutschebahn.com
+            - --email-domain=cs.uni-freiburg.de
             - --upstream=file:///dev/null
             - --http-address=0.0.0.0:{{ .Values.global.oauth2_proxy_port }}
             - --whitelist-domain=.{{ .Values.global.domain }}
