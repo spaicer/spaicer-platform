@@ -1,3 +1,16 @@
+#
+#  Copyright (c) 2023 SAP SE
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License, Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Contributors:
+#       SAP SE - initial implementation
+#
+
 ---
 apiVersion: v2
 name: spaicer-platform
@@ -59,10 +72,29 @@ dependencies:
 #    tags:
 #      - dsc
 
+  - name: postgresql
+    alias: postgres
+    version: 12.1.6
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgres.enabled
+
+  - name: vault
+    version: 0.20.0
+    repository: https://helm.releases.hashicorp.com
+    alias: vault
+    condition: vault.enabled
+
+  - name: tractusx-connector
+    version: "0.3.2"
+    repository: "https://catenax-ng.github.io/tx-tractusx-edc"
+    alias: tractusxconnector
+    condition: tractusxconnector.enabled
+
   - name: emqx
     version: "4.3.10"
     repository: "https://repos.emqx.io/charts"
     alias: emqxmqttbroker
+    condition: emqxmqttbroker.enabled
     tags:
       - emqx
 
@@ -70,6 +102,7 @@ dependencies:
     version: "9.0.0"
     repository: "https://k8s-at-home.com/charts/"
     alias: nodered
+    condition: nodered.enabled
     tags:
       - nodered
 
@@ -77,6 +110,7 @@ dependencies:
     version: "2.6.3"
     repository: "https://charts.konghq.com"
     alias: kong
+    condition: kong.enabled
     tags:
       - kong
 
@@ -85,6 +119,7 @@ dependencies:
     version: "1.4.0"#"8.5.2"
     repository: "https://airflow.apache.org"#"https://airflow-helm.github.io/charts"
     alias: airflow
+    condition: airflow.enabled
     tags:
       - airflow
 
@@ -92,6 +127,7 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: digitalcoilbackend
+    condition: digitalcoilbackend.enabled
     tags:
       - prototype-uc1-narrative1-digital-coil
 
@@ -99,6 +135,7 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: digitalcoilui
+    condition: digitalcoilui.enabled
     tags:
       - digital-coil-ui
 
@@ -106,6 +143,7 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: annotatormodule
+    condition: annotatormodule.enabled
     tags:
       - annotator-module
 
@@ -114,6 +152,7 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: supplychainanalyzer
+    condition: supplychainanalyzer.enabled
     tags:
       - supply-chain-analyzer
 
@@ -121,6 +160,7 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: supplychainui
+    condition: supplychainui.enabled
     tags:
       - supply-chain-ui
 
@@ -129,6 +169,7 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: maintenancelevelpredictionui
+    condition: maintenancelevelpredictionui.enabled
     tags:
       - maintenance-level-prediction-ui
 
@@ -136,5 +177,6 @@ dependencies:
     version: "0.0.1"
     repository: "file://../../charts/generic-module"
     alias: ap7maintenancelevelprediction
+    condition: ap7maintenancelevelprediction.enabled
     tags:
       - ap7-maintenance-level-prediction

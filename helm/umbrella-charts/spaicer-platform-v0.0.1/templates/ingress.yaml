@@ -1,3 +1,16 @@
+#
+#  Copyright (c) 2023 SAP SE
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License, Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Contributors:
+#       SAP SE - initial implementation
+#
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -20,13 +33,6 @@ spec:
     - host: {{ .Values.ingress.subDomain }}.{{ .Values.global.domain }}
       http:
         paths:
-          - path: /dsc
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.dataspaceconnector.fullnameOverride }}
-                port:
-                  number: 80
           - path: /emqx-ws
             pathType: Prefix
             backend:
@@ -41,13 +47,6 @@ spec:
                 name: {{ .Values.emqxmqttbroker.fullnameOverride }}
                 port:
                   number: 8084
-          - path: /v2
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Values.dataspaceconnector.fullnameOverride }}
-                port:
-                  number: 80
   tls:
     - hosts:
       - {{ .Values.ingress.subDomain }}.{{ .Values.global.domain }}

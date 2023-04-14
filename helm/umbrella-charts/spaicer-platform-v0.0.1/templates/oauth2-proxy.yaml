@@ -1,3 +1,16 @@
+#
+#  Copyright (c) 2023 SAP SE
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License, Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Contributors:
+#       SAP SE - initial implementation
+#
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,6 +41,8 @@ spec:
             - --email-domain=tu-darmstadt.de
             - --email-domain=deutschebahn.com
             - --email-domain=cs.uni-freiburg.de
+            - --email-domain=hotmail.com
+            - --email-domain=hotmail.de
             - --upstream=file:///dev/null
             - --http-address=0.0.0.0:{{ .Values.global.oauth2_proxy_port }}
             - --whitelist-domain=.{{ .Values.global.domain }}

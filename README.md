@@ -110,3 +110,72 @@ Nevertheless, decK can be used to query the auto-generated api keys of consumers
 ```
 deck dump --kong-addr https://kong-admin.<namespace>.<domain>:443
 ```
+
+## Embedded Components
+
+### PostgreSQL
+
+The postgres service is mainly used by the EDC Connector and Apache Airflow as persistence layer.
+
+* Project homepage: https://www.postgresql.org
+
+### Hashicorp Vault
+
+The vault service is used mainly by the EDC Connector for storing its secrets. 
+
+* Project homepage: https://www.vaultproject.io/
+
+### Eclipse Dataspace Components (EDC) Connector
+
+The EDC Connector is embedded based on its Tractusx distribution. The connector setup consists of a postgres-based 
+persistence and a hashicorp-based vault.   
+
+* EDC homepage: https://github.com/eclipse-edc/Connector
+* Tractusx homepage: https://catenax-ng.github.io/tx-tractusx-edc
+
+### EMX
+
+The EMQ MQTT broker service is exposed to external client both via HTTP and MQTT protocol. 
+
+* Project homepage: https://www.emqx.io
+
+### Node-RED
+
+* Project homepage: https://nodered.org
+
+### Kong 
+
+The kong API gateway service is set up with a configmap-based persistence (instead of a database). 
+
+* Project homepage: https://github.com/Kong/kong
+
+### Apache Airflow
+
+The airflow service reuses the central postgres service for persistence (instead of an own instance). 
+
+* Project homepage: https://airflow.apache.org
+
+### SPAICER Digital Coil
+
+This service consists of a user interface and a backend.
+
+UI homepage: https://github.com/spaicer/digital-coil-ui
+Backend homepage: https://github.com/spaicer/prototype-uc1-narrative1-digital-coil
+
+### SPAICER Annotator
+
+Project homepage: https://github.com/spaicer/annotator-module
+
+### SPAICER Supply Chain Analyzer
+
+This service consists of a user interface and a backend.
+
+UI homepage: https://github.com/spaicer/supply-chain-ui
+Backend homepage: https://github.com/spaicer/supply-chain-analyzer
+
+### SPAICER Maintenance Level Prediction
+
+This service consists of a user interface and a backend.
+
+UI homepage: https://github.com/spaicer/maintenance-level-prediction-ui
+Backend homepage: https://github.com/spaicer/ap7-maintenance-level-prediction
